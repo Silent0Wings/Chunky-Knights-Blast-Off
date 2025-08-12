@@ -1,0 +1,36 @@
+1- run this command :
+export LIBGL_ALWAYS_SOFTWARE=1
+
+2- then compiles with : g++
+
+3- then runs the executable
+
+
+
+---------------------------------------------------------------------
+
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build and Run with Software Rendering",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-c",
+        "LIBGL_ALWAYS_SOFTWARE=1 g++ -std=c++17 -g -fdiagnostics-color=always '${file}' -o '${fileDirname}/${fileBasenameNoExtension}' -lGLEW -lGL -lglfw && LIBGL_ALWAYS_SOFTWARE=1 '${fileDirname}/${fileBasenameNoExtension}'"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    }
+  ]
+}

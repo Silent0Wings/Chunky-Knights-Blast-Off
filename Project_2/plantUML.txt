@@ -1,0 +1,106 @@
+@startuml
+title High-level class diagram for Rendering/Game Snippet
+
+skinparam classAttributeIconSize 0
+skinparam dpi 140
+
+' ==== Core Data ====
+class SceneAssets {
+  +GLuint grass, brick, cement, rockTex, space, brick2
+  +GLuint chunky_knight_tex, tankTex, treeTex, cliffTex
+  +GLuint earth, jupiter, mars, mercury, neptune, pluto
+  +GLuint saturn, sun, uranus, venus, moon, rocketTexture, saturnRing
+  +GLuint planetTextures[11]
+  +GLuint textureLocation
+  --
+  +GLuint cubeVAO, planetVAO, rocketVAO, saturnRingVao
+  +GLuint chunky_knightVao, tankVAO, treeVAO
+  --
+  +string cubePath, planetPath, rocketPath, saturnRingPath
+  +string chunky_knightPath, tankPath, treePath
+  --
+  +int cubeVertices, planet1Vertices, rocketVertices
+  +int saturnRingVertices, chunky_knightVertices
+  +int tankVerticies, treeVerticies
+  --
+  +int colorShaderProgram
+  +int texturedShaderProgram
+}
+
+class CameraState {
+  +vec3 position
+  +vec3 lookAt
+  +vec3 up
+  --
+  +float horizontalAngle
+  +float verticalAngle
+  +float fastSpeed
+  +float normalSpeed
+  +bool firstPerson
+  +bool goUp
+  +bool goDown
+  +double lastMouseX
+  +double lastMouseY
+  +int lastMouseLeftState
+  +float dt
+  +float lastFrameTime
+  --
+  +void updateDeltaTime(currentTime: float)
+}
+
+class EnemyHealth {
+  +int health = 150
+  +vec3 knightPosition
+  +int hitRadius = 20
+}
+
+class PlayerHealth {
+  +int health = 100
+}
+
+class Projectile {
+  +Projectile(position: vec3, velocity: vec3, shaderProgram: int)
+  +void Update(dt: float)
+  +void Draw(assets: SceneAssets)
+  +const vec3& position()
+  --
+  -GLuint mWorldMatrixLocation
+  -vec3 mPosition
+  -vec3 mVelocity
+}
+
+' ==== Systems / Free functions grouped ====
+class Systems {
+  +void drawTank(assets: SceneAssets)
+  +void drawRocket(assets: SceneAssets, projectileList: list<Projectile>&)
+  +void drawPlanets(assets: SceneAssets)
+  +void drawCubeField(assets: SceneAssets)
+  +void HealthBar(assets: SceneAssets, pos: vec3, health: float, targetPos: vec3, modelForwardOffsetDeg: float)
+  +void cameraHealthBar(assets: SceneAssets, camera: CameraState, health: float, screenOffset: vec3, distance: float)
+  +void drawGraph(assets: SceneAssets)
+  +void drawGraphTree(assets: SceneAssets)
+  +void GraphEnemy(eH: vector<EnemyHealth>&)
+  +void drawSkybox(assets: SceneAssets)
+  +void drawGround(assets: SceneAssets)
+  +void handleInput(window: GLFWwindow*, assets: SceneAssets, camera: CameraState, projectileList: list<Projectile>&)
+  +void drawChunkyKnight(assets: SceneAssets, camera: CameraState, pH: PlayerHealth, chunkyHP: EnemyHealth)
+  +void updateLights(shader: GLuint, lightPos1: vec3, lightPos2: vec3, viewPos: vec3)
+  +void drawProjectile(projectiles: list<Projectile>&, camera: CameraState, chunkyHP: EnemyHealth, assets: SceneAssets)
+}
+
+' ==== Relationships ====
+Projectile ..> SceneAssets : uses in Draw()
+Systems ..> SceneAssets
+Systems ..> CameraState
+Systems ..> EnemyHealth
+Systems ..> PlayerHealth
+Systems ..> Projectile
+Systems ..> GLFWwindow : input
+
+note right of Systems
+Groups free functions found in the file.
+Actual implementation remains free/namespace-level;
+class used for diagram clarity only.
+end note
+
+@enduml

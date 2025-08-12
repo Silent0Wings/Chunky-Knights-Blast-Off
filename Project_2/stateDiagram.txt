@@ -1,0 +1,87 @@
+@startuml
+title Main Loop incl. Input, Rocket Spawns, Projectile-Enemy Checks, Enemy Attacks, Rendering
+
+skinparam dpi 140
+
+[*] --> Running
+state Running {
+  state "Main Loop" as Loop {
+    [*] --> FrameStart
+
+    ' === 1) Input ===
+    FrameStart --> HandleInput : updateDeltaTime()\nread keys/mouse
+    state HandleInput {
+      [*] --> ReadInput
+      ReadInput --> MaybeSpawnFromInput : LMB edge -> projectileList.emplace_back()
+      MaybeSpawnFromInput --> [*]
+    }
+
+    ' === 2) Simulation ===
+    HandleInput --> Simulate
+    state Simulate {
+      [*] --> RocketPhase
+
+      ' drawRocket() also spawns projectiles on timer
+      state RocketPhase {
+        [*] --> DrawRocket : drawRocket(assets, projectileList)
+        DrawRocket --> MaybeSpawnFromRocket : if now - lastShot >= fireInterval\nemplace_back()
+        MaybeSpawnFromRocket --> [*]
+      }
+
+      RocketPhase --> ProjectilesPhase
+
+      ' For each projectile: update, check vs ALL enemies, erase on hit
+      state "ProjectilesPhase" as ProjPhase {
+        [*] --> ForEachProjectile
+        ForEachProjectile --> UpdateProjectile : p.Update(dt)
+        UpdateProjectile --> CheckVsAllEnemies : enemy.health > 0
+        CheckVsAllEnemies --> HitEnemy : distance <= hitRadius
+        HitEnemy --> ApplyDamage : enemy.health -= 40
+        ApplyDamage --> DespawnProjectile : erase from list
+        DespawnProjectile --> ForEachProjectile
+        CheckVsAllEnemies --> NoHit : none in range
+        NoHit --> ForEachProjectile
+        ForEachProjectile --> [*] : done
+      }
+
+      ProjPhase --> EnemiesPhase
+
+      ' For each alive enemy: draw + attack player if close
+      state "EnemiesPhase" as EnemyPhase {
+        [*] --> ForEachEnemy
+        ForEachEnemy --> SkipDead : enemy.health <= 0
+        SkipDead --> ForEachEnemy
+        ForEachEnemy --> DrawAndAttack : enemy.health > 0
+        state DrawAndAttack {
+          [*] --> DrawEnemy : drawChunkyKnight()
+          DrawEnemy --> CheckPlayerProximity
+          CheckPlayerProximity --> DamagePlayer : dist < hitRadius\naccumulate DPS over dt
+          DamagePlayer --> [*]
+          CheckPlayerProximity --> [*] : else
+        }
+        DrawAndAttack --> ForEachEnemy
+        ForEachEnemy --> [*] : done
+      }
+
+      EnemiesPhase --> [*]
+    }
+
+    ' === 3) Rendering ===
+    Simulate --> Render
+    state Render {
+      [*] --> Ground : drawGround()
+      Ground --> Trees : drawGraphTree()
+      Trees --> OptionalStuff : drawTank(), drawPlanets(), drawCubeField()
+      OptionalStuff --> Sky : drawSkybox()
+      Sky --> HUD : cameraHealthBar(), HealthBar()
+      HUD --> [*]
+    }
+
+    Render --> FrameEnd : swap buffers, poll events
+    FrameEnd --> FrameStart
+  }
+
+  Running --> Exit : player.health <= 0
+}
+Exit --> [*]
+@enduml

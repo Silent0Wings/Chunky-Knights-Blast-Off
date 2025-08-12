@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug OpenGL",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/Project_2/main", // Adjust this to the correct path where your executable 'main' is generated
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/Project_2", // Set this to your project directory or where your program expects to run from
+      "preLaunchTask": "Build OpenGL App", // Ensure this matches the label in your tasks.json
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}

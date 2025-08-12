@@ -1,0 +1,15 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-I../include",
+      "-o",
+      "Tut04",
+      "../Tut04/Tut04.cpp"
+    ],
+    "directory": "/mnt/c/Users/ypers/OneDrive/Documents/COMP371/COMP371/build",
+    "file": "/mnt/c/Users/ypers/OneDrive/Documents/COMP371/COMP371/Tut04/Tut04.cpp",
+    "output": "/mnt/c/Users/ypers/OneDrive/Documents/COMP371/COMP371/build/Tut04"
+  }
+]

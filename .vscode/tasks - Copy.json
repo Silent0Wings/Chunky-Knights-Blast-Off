@@ -1,0 +1,47 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build OpenGL App",
+      "type": "shell",
+      "command": "/usr/bin/g++",
+      "args": [
+        "-std=c++17",
+        "-g",
+        "-fdiagnostics-color=always",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}",
+        "-lGLEW",
+        "-lGL",
+        "-lglfw"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Run Software-render OpenGL",
+      "type": "shell",
+      "dependsOn": "Build OpenGL App",
+      "options": {
+        "env": {
+          "LIBGL_ALWAYS_SOFTWARE": "1"
+        }
+      },
+      "command": "${fileDirname}/${fileBasenameNoExtension}",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    }
+  ]
+}
