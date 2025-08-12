@@ -1,4 +1,4 @@
-# Chunky Knights Blast-Off
+# Chunky-Knights-Blast-Off
 
 An arid battlefield adventure game where you navigate terrain, evade chunky knights, and engage in dynamic combat using a plane and tank. Utilizes real-time rendering and dynamic physics for immersive gameplay.
 
