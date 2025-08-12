@@ -70,10 +70,10 @@ Chunky-Knights-Blast-Off/
 
 ## Example & Documentation
 
-![Preview](Video_preview.gif)
-![State Diagram](StateDiagram.png)
-![UML Diagram](UML.png)
 
+<img src="Video_preview.gif" alt="Preview" width="600"/>
+<img src="StateDiagram.png" alt="Diagram" width="600"/>
+<img src="UML.png" alt="UML" width="600"/>
 
 
 ## Build Instructions
